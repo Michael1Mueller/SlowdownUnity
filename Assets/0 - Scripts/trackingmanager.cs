@@ -1,6 +1,7 @@
 using System;
 using System.Text;
 using UnityEngine;
+using System.IO;
 using System.Runtime.InteropServices;
 
 public class trackingmanager : MonoBehaviour
@@ -39,6 +40,10 @@ public class trackingmanager : MonoBehaviour
         private float startTrialTime = 0f;
         private float relativeTime = 0f;
         private float maxCountingTime = 4f; // we exclude trials that take longer than 4 seconds
+        private string projectRoot;
+        private string trackingFilePath;
+
+
 
         [DllImport("__Internal")]
         private static extern void receiveTrackingData(string data);
@@ -48,6 +53,25 @@ public class trackingmanager : MonoBehaviour
                 trackingLayer = LayerMask.GetMask("Tracker");
                 trialManager = GetComponent<trialmanager>();
                 ResetTrackingData();
+
+                projectRoot = Directory.GetParent(Application.dataPath).FullName;
+
+                // Pfad zum Data-Ordner
+                string folderPath = Path.Combine(projectRoot, "Data");
+                if (!Directory.Exists(folderPath))
+                        Directory.CreateDirectory(folderPath);
+
+                // Pfad zur CSV-Datei
+                trackingFilePath = Path.Combine(folderPath, $"{pID}_trackingData.csv");
+
+                 // Header schreiben, falls Datei noch nicht existiert
+                if (!File.Exists(trackingFilePath))
+                {
+                        File.WriteAllText(trackingFilePath, trackingDataHeader + "\n");
+                }
+
+                Debug.Log("Tracking CSV Pfad: " + trackingFilePath);
+                
         }
 
         public void updateMouseTracking(Vector2 mouseDelta, EventTrigger trigger = EventTrigger.noEvent)
@@ -132,6 +156,16 @@ public class trackingmanager : MonoBehaviour
                         $"{mouseDelta.y:F3}," +
                         $"{currentPhase}," +
                         $"{trigger};";
+
+                try
+                {
+                        File.AppendAllText(trackingFilePath, lastTrackingEntry + "\n");
+                }
+                catch (Exception e)
+                {
+                        Debug.LogError("Fehler beim Speichern der Tracking-Daten: " + e.Message);
+                }
+
 
                 trackingDataBuilder.AppendLine(lastTrackingEntry); // Keep history if needed
                 // Debug.Log($"Last Entry: {lastTrackingEntry}"); // Log only the latest
