@@ -56,5 +56,5 @@
         "temp/": true,
         "Temp/": true
     },
-    "dotnet.defaultSolution": "MA_Slowdown_Effect-main.sln"
+    "dotnet.defaultSolution": "SlowdownUnity.sln"
 }
