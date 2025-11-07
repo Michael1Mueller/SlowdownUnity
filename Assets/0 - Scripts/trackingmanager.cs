@@ -53,24 +53,6 @@ public class trackingmanager : MonoBehaviour
                 trackingLayer = LayerMask.GetMask("Tracker");
                 trialManager = GetComponent<trialmanager>();
                 ResetTrackingData();
-
-                projectRoot = Directory.GetParent(Application.dataPath).FullName;
-
-                // Pfad zum Data-Ordner
-                string folderPath = Path.Combine(projectRoot, "Data");
-                if (!Directory.Exists(folderPath))
-                        Directory.CreateDirectory(folderPath);
-
-                // Pfad zur CSV-Datei
-                trackingFilePath = Path.Combine(folderPath, $"{pID}_trackingData.csv");
-
-                 // Header schreiben, falls Datei noch nicht existiert
-                if (!File.Exists(trackingFilePath))
-                {
-                        File.WriteAllText(trackingFilePath, trackingDataHeader + "\n");
-                }
-
-                Debug.Log("Tracking CSV Pfad: " + trackingFilePath);
                 
         }
 
@@ -175,6 +157,24 @@ public class trackingmanager : MonoBehaviour
         {
                 pID = id;
                 pVersion = version;
+
+                projectRoot = Directory.GetParent(Application.dataPath).FullName;
+
+                // Pfad zum Data-Ordner
+                string folderPath = Path.Combine(projectRoot, "Data");
+                if (!Directory.Exists(folderPath))
+                        Directory.CreateDirectory(folderPath);
+
+                // Pfad zur CSV-Datei
+                trackingFilePath = Path.Combine(folderPath, $"{pID}_trackingData.csv");
+
+                 // Header schreiben, falls Datei noch nicht existiert
+                if (!File.Exists(trackingFilePath))
+                {
+                        File.WriteAllText(trackingFilePath, trackingDataHeader + "\n");
+                }
+
+                Debug.Log("Tracking CSV Pfad: " + trackingFilePath);
         }
 
         public Vector2 GetMousePosition()

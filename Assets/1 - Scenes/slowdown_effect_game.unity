@@ -5681,8 +5681,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 276b9c62bbfa77f428006146c4f5a428, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxTrials: 60
-  maxRounds: 16
+  maxTrials: 10
+  maxRounds: 1
   practiceTrials: 10
   version: rld
   longDelay: 0.6

@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -16,6 +17,10 @@ public class datamanager : MonoBehaviour
 
     private string id;
 
+    private string dataFilePath;
+    private string dataHeader = "id, gameType, round, trial, timestamp, time, mouseX, mouseY, position, effectDelay, startRT, endRT, RT, status;";
+
+
     [DllImport("__Internal")]
     private static extern void receiveGameData(string data);
     [DllImport("__Internal")]
@@ -28,6 +33,20 @@ public class datamanager : MonoBehaviour
         // generate random 4-digit id
         // 1st digit: 1-9, rest: 0-9
         id = UnityEngine.Random.Range(1, 10).ToString() + UnityEngine.Random.Range(0, 10).ToString() + UnityEngine.Random.Range(0, 10).ToString() + UnityEngine.Random.Range(0, 10).ToString();
+        string projectRoot = Directory.GetParent(Application.dataPath).FullName;
+        string folderPath = Path.Combine(projectRoot, "Data");
+        if (!Directory.Exists(folderPath))
+            Directory.CreateDirectory(folderPath);
+
+        dataFilePath = Path.Combine(folderPath, $"{id}_trialData.csv");
+
+        // Header schreiben, falls Datei noch nicht existiert
+        if (!File.Exists(dataFilePath))
+        {
+            File.WriteAllText(dataFilePath, dataHeader + "\n");
+        }
+
+        Debug.Log("Trial CSV Pfad: " + dataFilePath);
     }
 
     public void AddTrialToData(int round, int trial, float mouse_x, float mouse_y, string position, float effect_delay, float start_RT, float end_RT, float RT, int status)
@@ -51,6 +70,14 @@ public class datamanager : MonoBehaviour
             roundSuccessHitCounter++;
         }
         roundRTs.Add(RT);
+        try
+        {
+            File.AppendAllText(dataFilePath, row + "\n");
+        }
+        catch (Exception e)
+        {
+            Debug.LogError("Fehler beim Speichern der Trial-Daten: " + e.Message);
+        }
 
     }
 
