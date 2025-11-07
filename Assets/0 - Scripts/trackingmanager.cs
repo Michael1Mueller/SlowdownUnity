@@ -15,7 +15,8 @@ public class trackingmanager : MonoBehaviour
         public bool isTrackingMouseData = false;
 
         private StringBuilder trackingDataBuilder = new StringBuilder();
-        private string trackingDataHeader = "id, round, trial, version, timestamp, frame, relativeTime, pointerX, pointerY, mouseDX, mouseDY, phase, event;";
+        private string trackingDataHeader = "id, round, trial, version, timestamp, frame, pointerX, pointerY, phase, event, side;";
+        private string targetSide = "none";
 
         public enum TrackingPhase
         {
@@ -131,13 +132,11 @@ public class trackingmanager : MonoBehaviour
                         $"{pVersion}," +
                         $"{DateTime.Now:HH:mm:ss.fff}," +
                         $"{Time.frameCount}," +
-                        $"{relativeTime:F3}," +
                         $"{mouseX:F3}," +
                         $"{mouseY:F3}," +
-                        $"{mouseDelta.x:F3}," +
-                        $"{mouseDelta.y:F3}," +
                         $"{currentPhase}," +
-                        $"{trigger};";
+                        $"{trigger}," +
+                        $"{targetSide};";
 
                 try
                 {
@@ -182,12 +181,21 @@ public class trackingmanager : MonoBehaviour
                 return new Vector2(mouseX, mouseY);
         }
 
+        public void SetTargetSide(string side)
+        {
+        // Nur "left" oder "right" akzeptieren
+        if (side == "left" || side == "right")
+                targetSide = side;
+        else
+                targetSide = "none"; // "center" oder andere ignorieren
+        }
+
         public void SendDataToJS()
         {
                 // Javascript function call to send data
-#if UNITY_WEBGL && !UNITY_EDITOR
-        receiveTrackingData(trackingDataBuilder.ToString());
-#endif
+                #if UNITY_WEBGL && !UNITY_EDITOR
+                        receiveTrackingData(trackingDataBuilder.ToString());
+                #endif
                 ResetTrackingData();
         }
 

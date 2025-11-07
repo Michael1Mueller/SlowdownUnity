@@ -240,7 +240,7 @@ public class mainmanager : MonoBehaviour
         {
                 trackingManager.SendDataToJS();
                 uiManager.PauseGame();
-                if (trialManager.currentRound > 8) // halfway
+                if (trialManager.currentRound > 1) // halfway
                 {
                         dataManager.SendData(); // send mid-game data to JS
                 }
@@ -251,8 +251,9 @@ public class mainmanager : MonoBehaviour
         {
                 FPSController.SetActive(false);
                 Cursor.lockState = CursorLockMode.None;
-                trackingManager.SendDataToJS();
-                dataManager.SendSecondData(); // save data and start JS-functions
+                Application.OpenURL("https://www.wowhead.com/wotlk/items/containers/bags#0+3+14+19;source=tailoring");
+                //trackingManager.SendDataToJS();
+                //dataManager.SendSecondData(); // save data and start JS-functions
         }
 
         public void ResetRound()

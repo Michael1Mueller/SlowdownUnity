@@ -5,7 +5,7 @@ public class trialmanager : MonoBehaviour
 {
         // important stuff for the trial
         public int maxTrials = 60;
-        public int maxRounds = 8;
+        public int maxRounds = 2;
         public int practiceTrials = 10;
         public string version = "lld";
         public float longDelay = 0.6f;
@@ -112,6 +112,8 @@ public class trialmanager : MonoBehaviour
 
                 currentOrbStr = trialOrder[currentTrial];
                 currentTrial++;
+
+                trackingManager.SetTargetSide(currentOrbStr);
 
                 OnTrialStarted?.Invoke(currentOrbStr); // start trial with next side target
                 
