@@ -5681,8 +5681,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 276b9c62bbfa77f428006146c4f5a428, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxTrials: 10
-  maxRounds: 1
+  maxTrials: 60
+  maxRounds: 2
   practiceTrials: 10
   version: rld
   longDelay: 0.6
@@ -5712,6 +5712,8 @@ MonoBehaviour:
   orb_middle: {fileID: 571457059}
   orb_right: {fileID: 1730982293}
   orb_left: {fileID: 1658741001}
+  blueTexture: {fileID: 2800000, guid: aa701e5be2dbcd24aad4fb9c3ca284da, type: 3}
+  originalTexture: {fileID: 2800000, guid: 5022e75417d195b40b5423f6c2a02c3c, type: 3}
 --- !u!114 &1069446845
 MonoBehaviour:
   m_ObjectHideFlags: 0

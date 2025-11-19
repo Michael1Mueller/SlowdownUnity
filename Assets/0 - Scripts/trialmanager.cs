@@ -70,6 +70,7 @@ public class trialmanager : MonoBehaviour
                 // currentRound++;
                 ResetTrialState();
                 targetManager.ShowMiddleOrb();
+                targetManager.MakeOpaque(targetManager.orb_middle);
         }
 
         private void ResetTrialState()
@@ -99,6 +100,12 @@ public class trialmanager : MonoBehaviour
                 }
         }
 
+        public string GetNextOrbName()
+        {
+                if (currentTrial >= currentMaxTrials) return null;
+                return trialOrder[currentTrial];
+        }
+
         // called in mainmanager with hit of middle target
         public void PrepareTrial()
         {
@@ -112,10 +119,11 @@ public class trialmanager : MonoBehaviour
 
                 currentOrbStr = trialOrder[currentTrial];
                 currentTrial++;
+                Debug.Log(currentTrial);
 
                 trackingManager.SetTargetSide(currentOrbStr);
 
-                OnTrialStarted?.Invoke(currentOrbStr); // start trial with next side target
+                //OnTrialStarted?.Invoke(currentOrbStr); // start trial with next side target
                 
         }
 

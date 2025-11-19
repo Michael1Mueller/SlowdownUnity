@@ -31,6 +31,8 @@ public class mainmanager : MonoBehaviour
         private UnityEngine.Vector2 mouseDelta;
         private bool targetAppeared = false;
 
+        private Coroutine middleOrbCoroutine;
+
 
         void Start()
         {
@@ -45,7 +47,7 @@ public class mainmanager : MonoBehaviour
 
 
                 // register to events
-                trialManager.OnTrialStarted += HandleTrialStart;
+                //trialManager.OnTrialStarted += HandleTrialStart;
                 trialManager.OnTrialEnded += HandleTrialEnd;
                 trialManager.OnRoundEnded += HandleRoundEnd;
                 trialManager.OnGameEnded += HandleGameEnd;
@@ -87,12 +89,15 @@ public class mainmanager : MonoBehaviour
 
                                 if (hit.collider.CompareTag("orb"))
                                 {
-                                        if (!trialManager.isTrialRunning && hit.collider.name == "middleOrb") // middle target hit, trial starts
+                                        if (!trialManager.isTrialRunning && hit.collider.name == "middleOrb" && middleOrbCoroutine == null) // middle target hit, trial starts
                                         {
-                                                // sets up the trial and calls start-event
-                                                trialManager.PrepareTrial();
-                                                eventTriggered = true;
-                                                trackingManager.updateMouseTracking(mouseDelta, trackingmanager.EventTrigger.middleTargetClick);
+                                               string nextOrb = trialManager.GetNextOrbName(); // Welcher Orb kommt als nächstes?
+                                                if (nextOrb != null)
+                                                {
+                                                        middleOrbCoroutine = StartCoroutine(MiddleOrbWaitAndTracking(nextOrb));
+                                                        eventTriggered = true;
+                                                        trackingManager.updateMouseTracking(mouseDelta, trackingmanager.EventTrigger.middleTargetClick);
+                                                }
                                         }
                                         else if (trialManager.isTrialRunning && (hit.collider.name == "rightOrb" || trialManager.isTrialRunning && hit.collider.name == "leftOrb")) // side target hit, trial stops
                                         {
@@ -180,23 +185,79 @@ public class mainmanager : MonoBehaviour
                 if (trialManager.currentTrial < trialManager.currentMaxTrials)
                 {
                         targetManager.ShowMiddleOrb();
+                        targetManager.MakeOpaque(targetManager.orb_middle);
                 }
 
         }
 
         // gets called with trialmanager.StartTrial()
         // happens when middle target is hit
-
+        /*
         void HandleTrialStart(string activeOrb)
         {
                 // NOTE: tracking test
-                canCastSpell = false;
-                trackingManager.isTrackingMouseData = true; // start mouse tracking
+                // canCastSpell = false;
+                // trackingManager.isTrackingMouseData = true; // start mouse tracking
 
-                targetManager.HideAllOrbs();
-                soundManager.PlayHitSound();
-                StartCoroutine(PreTargetStimulusTime(activeOrb));
+                // targetManager.HideAllOrbs();
+                targetManager.MakeTransparent(targetManager.orb_middle);
                 
+                if (middleOrbCoroutine != null)
+                        StopCoroutine(middleOrbCoroutine);
+                
+                middleOrbCoroutine = StartCoroutine(MiddleOrbWaitAndTracking(activeOrb));
+
+                soundManager.PlayHitSound();
+                // StartCoroutine(PreTargetStimulusTime(activeOrb));
+
+        }*/
+
+        private IEnumerator MiddleOrbWaitAndTracking(string activeOrb)
+        {
+                // 1️⃣ Setup
+                targetManager.MakeTransparent(targetManager.orb_middle);
+                soundManager.PlayHitSound(); // HIER den Sound abspielen
+                trialManager.isWaitingPhase = true;
+                trackingManager.currentPhase = trackingmanager.TrackingPhase.waitingForTarget;
+                canCastSpell = false;
+
+                float timer = 0f;
+                float duration = trialManager.stimulusTime; // 0.4s
+
+                // 2️⃣ Timer mit Prüfung
+                while (timer < duration)
+                {
+                        if (!IsPlayerOnMiddleOrb())
+                        {
+                                // Abbruch
+                                targetManager.MakeOpaque(targetManager.orb_middle);
+                                targetManager.orb_middle.SetActive(true);
+                                trialManager.isWaitingPhase = false;
+                                trialManager.isTrialRunning = false; 
+                                trackingManager.isTrackingMouseData = false;
+                                canCastSpell = true;
+                                middleOrbCoroutine = null;
+                                yield break;
+                        }
+                        mouseDelta = FPSController.GetComponentInChildren<FirstPersonLook>().updateFPSController();
+                        trackingManager.updateMouseTracking(mouseDelta);
+
+                        timer += Time.deltaTime;
+                        yield return null;
+                }
+
+                // 3️⃣ Erfolgreich - JETZT Trial starten
+                trialManager.PrepareTrial(); // currentTrial++ passiert hier
+
+                targetManager.orb_middle.SetActive(false); // Middle Orb ausblenden
+                targetManager.ShowTargetOrb(activeOrb); // Side Target anzeigen
+                trackingManager.isTrackingMouseData = true;
+
+                trialManager.isWaitingPhase = false;
+                targetAppeared = true;
+                startRT = Time.time;
+                canCastSpell = true;
+                middleOrbCoroutine = null;
         }
 
         public IEnumerator PreTargetStimulusTime(string activeOrb)
@@ -205,20 +266,11 @@ public class mainmanager : MonoBehaviour
 
                 trackingManager.currentPhase = trackingmanager.TrackingPhase.waitingForTarget; // set tracking phase to waiting for target
 
-                // Zugriff auf das Look-Script
-                var look = FPSController.GetComponentInChildren<FirstPersonLook>();
-
-                // 🔒 Begrenzung aktivieren (z. B. ±5 Grad)
-                look.SetLookLimit(true, 5f);
-
-
                 yield return new WaitForSeconds(trialManager.stimulusTime);
-                
-                // 🔓 Begrenzung wieder deaktivieren
-                look.SetLookLimit(false);
 
                 canCastSpell = true;
 
+                targetManager.orb_middle.SetActive(false);
                 targetManager.ShowTargetOrb(activeOrb);
                 trialManager.isWaitingPhase = false;
 
@@ -240,7 +292,7 @@ public class mainmanager : MonoBehaviour
         {
                 trackingManager.SendDataToJS();
                 uiManager.PauseGame();
-                if (trialManager.currentRound > 1) // halfway
+                if (trialManager.currentRound > 1) // halfway // MAGIC NUMBER
                 {
                         dataManager.SendData(); // send mid-game data to JS
                 }
@@ -260,6 +312,17 @@ public class mainmanager : MonoBehaviour
         {
                 canCastSpell = true;
         }
+
+        private bool IsPlayerOnMiddleOrb()
+        {
+                Ray ray = new Ray(playerCamera.transform.position, playerCamera.transform.forward);
+                if (Physics.Raycast(ray, out RaycastHit hit))
+                {
+                        return hit.collider.name == "middleOrb";
+                }
+                return false;
+        }
+
 
 
 }
