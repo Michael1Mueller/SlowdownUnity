@@ -5819,7 +5819,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxTrials: 60
-  maxRounds: 2
+  maxRounds: 16
   practiceTrials: 10
   version: rld
   longDelay: 0.6
