@@ -17,6 +17,7 @@ public class uimanager : MonoBehaviour
     public TMP_Text roundRoundText; // der text der in der Pause die Runde anzeigt, profi am werk
     public GameObject extendedPauseText;
     public GameObject confirmPreExitUI;
+    public GameObject middleOrbWarningText;
     public float pauseDuration = 30f;
     private int scorePoints = 0;
     private float accRound = 0f;
@@ -195,6 +196,18 @@ public class uimanager : MonoBehaviour
 
         trialsLeftText.text = (maxTrial - trial).ToString();
 
+    }
+
+    public void ShowMiddleOrbWarning()
+    {
+        if (middleOrbWarningText != null)
+            middleOrbWarningText.SetActive(true);
+    }
+
+    public void HideMiddleOrbWarning()
+    {
+        if (middleOrbWarningText != null)
+            middleOrbWarningText.SetActive(false);
     }
 
 }

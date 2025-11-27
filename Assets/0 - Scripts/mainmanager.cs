@@ -223,12 +223,14 @@ public class mainmanager : MonoBehaviour
 
                 float timer = 0f;
                 float duration = trialManager.stimulusTime; // 0.4s
+                uiManager.HideMiddleOrbWarning();
 
                 // 2️⃣ Timer mit Prüfung
                 while (timer < duration)
                 {
                         if (!IsPlayerOnMiddleOrb())
                         {
+                                uiManager.ShowMiddleOrbWarning();
                                 // Abbruch
                                 targetManager.MakeOpaque(targetManager.orb_middle);
                                 targetManager.orb_middle.SetActive(true);
@@ -245,6 +247,7 @@ public class mainmanager : MonoBehaviour
                         timer += Time.deltaTime;
                         yield return null;
                 }
+                uiManager.HideMiddleOrbWarning();
 
                 // 3️⃣ Erfolgreich - JETZT Trial starten
                 trialManager.PrepareTrial(); // currentTrial++ passiert hier
@@ -292,7 +295,7 @@ public class mainmanager : MonoBehaviour
         {
                 trackingManager.SendDataToJS();
                 uiManager.PauseGame();
-                if (trialManager.currentRound > 1) // halfway // MAGIC NUMBER
+                if (trialManager.currentRound > 8) // halfway // MAGIC NUMBER
                 {
                         dataManager.SendData(); // send mid-game data to JS
                 }
@@ -303,7 +306,7 @@ public class mainmanager : MonoBehaviour
         {
                 FPSController.SetActive(false);
                 Cursor.lockState = CursorLockMode.None;
-                Application.OpenURL("https://www.wowhead.com/wotlk/items/containers/bags#0+3+14+19;source=tailoring");
+                Application.OpenURL("https://docs.google.com/forms/d/e/1FAIpQLSefTRdQPSmkRtDXl7hXfX_hX6R7erGV8zn4V5YcvrnypVEIzw/viewform?usp=dialog");
                 //trackingManager.SendDataToJS();
                 //dataManager.SendSecondData(); // save data and start JS-functions
         }
