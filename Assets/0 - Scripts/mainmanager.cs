@@ -254,7 +254,7 @@ public class mainmanager : MonoBehaviour
                 }
                 uiManager.HideMiddleOrbWarning();
 
-                trialManager.PrepareTrial(); // currentTrial++ passiert hier
+                trialManager.PrepareTrial();
 
                 targetManager.orb_middle.SetActive(false); // Middle Orb ausblenden
                 targetManager.ShowTargetOrb(activeOrb); // Side Target anzeigen

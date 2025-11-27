@@ -5852,6 +5852,7 @@ MonoBehaviour:
   orb_left: {fileID: 1658741001}
   blueTexture: {fileID: 2800000, guid: aa701e5be2dbcd24aad4fb9c3ca284da, type: 3}
   originalTexture: {fileID: 2800000, guid: 5022e75417d195b40b5423f6c2a02c3c, type: 3}
+  outlineShaderMaterial: {fileID: 2100000, guid: 2cdde4727063cbe48a6af4ed36006dec, type: 2}
 --- !u!114 &1069446845
 MonoBehaviour:
   m_ObjectHideFlags: 0
