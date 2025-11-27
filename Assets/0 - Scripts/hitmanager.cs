@@ -44,6 +44,9 @@ public class hitmanager : MonoBehaviour
     private bool trackingStarted = false;
     private bool isWaitingPhase = false;
 
+    public mainmanager mainManager;
+    public int middleOrbExitCount;
+
     void Start()
     {
         Cursor.lockState = CursorLockMode.None;
@@ -172,9 +175,12 @@ public class hitmanager : MonoBehaviour
         currRT = endRT - startRT;
 
         bool isDelayedOrb = CheckIfDelayedOrb();
+        if(mainManager != null)
+        {
+            middleOrbExitCount = mainManager.GetMiddleOrbExitCount(); // Methode in mainmanager
+        }
 
-
-        GetComponent<datamanager>().AddTrialToData(currentRound, currentTrial, mouse_x, mouse_y, activeOrbStr, isDelayedOrb ? longDelay : 0, startRT, endRT, currRT, 1);
+        GetComponent<datamanager>().AddTrialToData(currentRound, currentTrial, mouse_x, mouse_y, activeOrbStr, isDelayedOrb ? longDelay : 0, startRT, endRT, currRT, 1, middleOrbExitCount);
 
         // update Points
         GetComponent<uimanager>().UpdateInGameUI(true, currRT, currentTrial, currentMaxTrials);
@@ -221,8 +227,12 @@ public class hitmanager : MonoBehaviour
         currRT = endRT - startRT;
 
         bool isDelayedOrb = CheckIfDelayedOrb();
+        if(mainManager != null)
+        {
+            middleOrbExitCount = mainManager.GetMiddleOrbExitCount(); // Methode in mainmanager
+        }
 
-        GetComponent<datamanager>().AddTrialToData(currentRound, currentTrial, mouse_x, mouse_y, activeOrbStr, isDelayedOrb ? longDelay : 0, startRT, endRT, currRT, 0);
+        GetComponent<datamanager>().AddTrialToData(currentRound, currentTrial, mouse_x, mouse_y, activeOrbStr, isDelayedOrb ? longDelay : 0, startRT, endRT, currRT, 0, middleOrbExitCount);
 
         // update Points
         GetComponent<uimanager>().UpdateInGameUI(false, currRT, currentTrial, currentMaxTrials);

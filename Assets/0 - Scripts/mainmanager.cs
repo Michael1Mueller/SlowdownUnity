@@ -32,6 +32,7 @@ public class mainmanager : MonoBehaviour
         private bool targetAppeared = false;
 
         private Coroutine middleOrbCoroutine;
+        private int middleOrbExitCount = 0;
 
 
         void Start()
@@ -102,11 +103,15 @@ public class mainmanager : MonoBehaviour
                                         else if (trialManager.isTrialRunning && (hit.collider.name == "rightOrb" || trialManager.isTrialRunning && hit.collider.name == "leftOrb")) // side target hit, trial stops
                                         {
                                                 StopTrial(true); // hit success
+                                                middleOrbExitCount = 0;
+
                                         }
                                 }
                                 else if (trialManager.isTrialRunning && !hit.collider.CompareTag("orb")) // hit no traget, but only counts if trial is running
                                 {
                                         StopTrial(false); // hit fail
+                                        middleOrbExitCount = 0;
+
                                 }
                         }
                 }
@@ -158,7 +163,8 @@ public class mainmanager : MonoBehaviour
                         startRT,
                         endRT,
                         currRT,
-                        hitSuccess ? 1 : 0);
+                        hitSuccess ? 1 : 0,
+                        middleOrbExitCount);
 
                 // Debug.Log($"Hit: {hitSuccess}, RT: {currRT}, Delay: {delay}");
 
@@ -214,7 +220,6 @@ public class mainmanager : MonoBehaviour
 
         private IEnumerator MiddleOrbWaitAndTracking(string activeOrb)
         {
-                // 1️⃣ Setup
                 targetManager.MakeTransparent(targetManager.orb_middle);
                 soundManager.PlayHitSound(); // HIER den Sound abspielen
                 trialManager.isWaitingPhase = true;
@@ -225,12 +230,12 @@ public class mainmanager : MonoBehaviour
                 float duration = trialManager.stimulusTime; // 0.4s
                 uiManager.HideMiddleOrbWarning();
 
-                // 2️⃣ Timer mit Prüfung
                 while (timer < duration)
                 {
                         if (!IsPlayerOnMiddleOrb())
                         {
                                 uiManager.ShowMiddleOrbWarning();
+                                middleOrbExitCount++;
                                 // Abbruch
                                 targetManager.MakeOpaque(targetManager.orb_middle);
                                 targetManager.orb_middle.SetActive(true);
@@ -249,7 +254,6 @@ public class mainmanager : MonoBehaviour
                 }
                 uiManager.HideMiddleOrbWarning();
 
-                // 3️⃣ Erfolgreich - JETZT Trial starten
                 trialManager.PrepareTrial(); // currentTrial++ passiert hier
 
                 targetManager.orb_middle.SetActive(false); // Middle Orb ausblenden
@@ -324,6 +328,11 @@ public class mainmanager : MonoBehaviour
                         return hit.collider.name == "middleOrb";
                 }
                 return false;
+        }
+
+        public int GetMiddleOrbExitCount()
+        {
+                return middleOrbExitCount;
         }
 
 

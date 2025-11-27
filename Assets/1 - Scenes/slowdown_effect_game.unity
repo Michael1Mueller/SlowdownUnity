@@ -4388,7 +4388,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Bitte bleiben Sie auf dem mittleren Ziel, bis das seitliche Ziel erscheint.
+  m_text: Bitte bleiben Sie auf der mittleren Zielposition, bis das seitliche Ziel
+    erscheint.
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
