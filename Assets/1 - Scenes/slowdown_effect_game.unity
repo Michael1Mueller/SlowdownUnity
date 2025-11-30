@@ -5822,7 +5822,7 @@ MonoBehaviour:
   maxTrials: 60
   maxRounds: 16
   practiceTrials: 10
-  version: rld
+  version: lld
   longDelay: 0.6
   shortDelay: 0
   stimulusTime: 0.4
