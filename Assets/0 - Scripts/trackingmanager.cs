@@ -15,7 +15,7 @@ public class trackingmanager : MonoBehaviour
         public bool isTrackingMouseData = false;
 
         private StringBuilder trackingDataBuilder = new StringBuilder();
-        private string trackingDataHeader = "id, round, trial, version, timestamp, frame, pointerX, pointerY, phase, event, side, delay;";
+        private string trackingDataHeader = "id,round,trial,version,timestamp,frame,pointerX,pointerY,phase,event,side,delay;";
         private string targetSide = "none";
 
         public enum TrackingPhase
