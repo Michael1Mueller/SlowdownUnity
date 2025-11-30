@@ -15,7 +15,7 @@ public class trackingmanager : MonoBehaviour
         public bool isTrackingMouseData = false;
 
         private StringBuilder trackingDataBuilder = new StringBuilder();
-        private string trackingDataHeader = "id, round, trial, version, timestamp, frame, pointerX, pointerY, phase, event, side;";
+        private string trackingDataHeader = "id, round, trial, version, timestamp, frame, pointerX, pointerY, phase, event, side, delay;";
         private string targetSide = "none";
 
         public enum TrackingPhase
@@ -43,6 +43,7 @@ public class trackingmanager : MonoBehaviour
         private float maxCountingTime = 4f; // we exclude trials that take longer than 4 seconds
         private string projectRoot;
         private string trackingFilePath;
+        private bool delay = false;
 
 
 
@@ -136,7 +137,8 @@ public class trackingmanager : MonoBehaviour
                         $"{mouseY:F3}," +
                         $"{currentPhase}," +
                         $"{trigger}," +
-                        $"{targetSide};";
+                        $"{targetSide}," + 
+                        $"{delay};";
 
                 try
                 {
@@ -188,6 +190,11 @@ public class trackingmanager : MonoBehaviour
                 targetSide = side;
         else
                 targetSide = "none"; // "center" oder andere ignorieren
+        
+        if ((pVersion == "lld" && targetSide == "left") || (pVersion == "rld" && targetSide == "right"))
+                delay = true;
+        else
+                delay = false;
         }
 
         public void SendDataToJS()

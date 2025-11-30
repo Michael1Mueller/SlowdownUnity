@@ -49,9 +49,9 @@ public class datamanager : MonoBehaviour
         Debug.Log("Trial CSV Pfad: " + dataFilePath);
     }
 
-    public void AddTrialToData(int round, int trial, float mouse_x, float mouse_y, string position, float effect_delay, float start_RT, float end_RT, float RT, int status, int middleOrbExitCount)
+    public void AddTrialToData(int round, string version, int trial, float mouse_x, float mouse_y, string position, float effect_delay, float start_RT, float end_RT, float RT, int status, int middleOrbExitCount)
     {
-        string row = $"{id}, RLD, {round}, {trial}, {DateTime.Now:HH:mm:ss.fff}, {Time.time}, {mouse_x}, {mouse_y}, {position}, {effect_delay}, {start_RT}, {end_RT}, {RT}, {status}, {middleOrbExitCount}";
+        string row = $"{id}, {version}, {round}, {trial}, {DateTime.Now:HH:mm:ss.fff}, {Time.time}, {mouse_x}, {mouse_y}, {position}, {effect_delay}, {start_RT}, {end_RT}, {RT}, {status}, {middleOrbExitCount}";
         if (round <= 8)
         {
             // first half of the game

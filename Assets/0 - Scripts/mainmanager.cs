@@ -155,6 +155,7 @@ public class mainmanager : MonoBehaviour
 
                 dataManager.AddTrialToData(
                         trialManager.currentRound,
+                        trialManager.version,
                         trialManager.currentTrial,
                         trackingManager.GetMousePosition().x,
                         trackingManager.GetMousePosition().y, // TODO 

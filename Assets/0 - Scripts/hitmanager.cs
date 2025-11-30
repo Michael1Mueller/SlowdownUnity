@@ -180,7 +180,7 @@ public class hitmanager : MonoBehaviour
             middleOrbExitCount = mainManager.GetMiddleOrbExitCount(); // Methode in mainmanager
         }
 
-        GetComponent<datamanager>().AddTrialToData(currentRound, currentTrial, mouse_x, mouse_y, activeOrbStr, isDelayedOrb ? longDelay : 0, startRT, endRT, currRT, 1, middleOrbExitCount);
+        GetComponent<datamanager>().AddTrialToData(currentRound, version, currentTrial, mouse_x, mouse_y, activeOrbStr, isDelayedOrb ? longDelay : 0, startRT, endRT, currRT, 1, middleOrbExitCount);
 
         // update Points
         GetComponent<uimanager>().UpdateInGameUI(true, currRT, currentTrial, currentMaxTrials);
@@ -232,7 +232,7 @@ public class hitmanager : MonoBehaviour
             middleOrbExitCount = mainManager.GetMiddleOrbExitCount(); // Methode in mainmanager
         }
 
-        GetComponent<datamanager>().AddTrialToData(currentRound, currentTrial, mouse_x, mouse_y, activeOrbStr, isDelayedOrb ? longDelay : 0, startRT, endRT, currRT, 0, middleOrbExitCount);
+        GetComponent<datamanager>().AddTrialToData(currentRound, version, currentTrial, mouse_x, mouse_y, activeOrbStr, isDelayedOrb ? longDelay : 0, startRT, endRT, currRT, 0, middleOrbExitCount);
 
         // update Points
         GetComponent<uimanager>().UpdateInGameUI(false, currRT, currentTrial, currentMaxTrials);
