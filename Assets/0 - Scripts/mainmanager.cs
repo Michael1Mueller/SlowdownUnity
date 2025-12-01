@@ -34,6 +34,9 @@ public class mainmanager : MonoBehaviour
         private Coroutine middleOrbCoroutine;
         private int middleOrbExitCount = 0;
 
+        private string baseUrl;
+        private string fullUrl;
+
 
         void Start()
         {
@@ -311,7 +314,10 @@ public class mainmanager : MonoBehaviour
         {
                 FPSController.SetActive(false);
                 Cursor.lockState = CursorLockMode.None;
-                Application.OpenURL("https://docs.google.com/forms/d/e/1FAIpQLSefTRdQPSmkRtDXl7hXfX_hX6R7erGV8zn4V5YcvrnypVEIzw/viewform?usp=dialog");
+                baseUrl = "https://docs.google.com/forms/d/e/1FAIpQLSefTRdQPSmkRtDXl7hXfX_hX6R7erGV8zn4V5YcvrnypVEIzw/viewform?usp=pp_url";
+                fullUrl = baseUrl + "&entry.1960662225=" + dataManager.GetID();
+                Application.OpenURL(fullUrl);
+                Application.Quit();
                 //trackingManager.SendDataToJS();
                 //dataManager.SendSecondData(); // save data and start JS-functions
         }
